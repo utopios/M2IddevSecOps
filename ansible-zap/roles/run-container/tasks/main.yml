@@ -4,6 +4,8 @@
       path: "{{ reports_folder }}"
       recurse: yes
       mode: 0770
+      owner: root
+      group: root
   - name: Run ZAP container for {{ web_url }} scann
     docker_container:
       name: "{{container_name}}"
@@ -14,7 +16,9 @@
   - name: get report log
     raw: "docker logs -f {{container_name}}"
     register: scan_output
-  
+  - name: save report locally
+    local_action: copy content={{ scan_output }} dest=report.html 
+    become: false
   - debug:
       msg: "{{scan_output}}"
 
