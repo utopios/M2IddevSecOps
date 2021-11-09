@@ -1,0 +1,23 @@
+---
+# tasks file for test-role
+  - name: add docker gpg key
+    apt_key:
+      url : "{{docker_debian_key}}"
+      state: present
+    when:
+      ansible_facts["os_family"] == "Debian"
+  - name: add docker repository
+    apt_repository:
+      repo: " {{docker_debian_base_repos}} {{ ansible_facts['distribution_release'] }} stable"
+    when:
+      ansible_facts["os_family"] == "Debian"
+  - name: install docker component
+    apt:
+      name:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+      update_cache: yes
+    notify: start docker service
+    when:
+      ansible_facts["os_family"] == "Debian"
