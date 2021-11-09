@@ -1,2 +1,4 @@
 [defaults]
 inventory = ./hosts
+remote_user = <user>
+private_key_file = <private_key_file>

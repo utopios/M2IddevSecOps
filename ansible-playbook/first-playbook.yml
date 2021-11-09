@@ -1,0 +1,27 @@
+# hosts => adresse ip ou bloc dans l'inventory
+- hosts: debian
+  become: true
+  tasks:
+    - name: task for install git, apache2 and php
+      apt:
+        name:
+          - git
+          - apache2
+          - php
+        update_cache: yes
+    - name: create html folder
+      file:
+        path: /var/www/html
+        state: directory
+        mode: '0755'
+    - name: copy to html folder
+      copy:
+        src: html/
+        dest: /var/www/html/
+    - name: restart apache2 service
+      service:
+        name: apache2
+        state: Started
+        enabled: yes
+
+    
