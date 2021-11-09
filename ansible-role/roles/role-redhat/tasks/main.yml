@@ -1,0 +1,23 @@
+---
+# tasks file for test-role
+  - name: add docker repository redhat 1
+    yum:
+      name: yum-utils 
+      update_cache: yes
+    when:
+      ansible_facts["os_family"] == "RedHat"
+  - name: add docker repository redhat 2
+    command:
+      cmd: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    when:
+      ansible_facts["os_family"] == "RedHat"
+  - name: install docker component
+    yum:
+      name:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+      update_cache: yes
+    notify: start docker service
+    when:
+      ansible_facts["os_family"] == "RedHat" 

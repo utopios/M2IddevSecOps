@@ -1,0 +1,7 @@
+---
+# handlers file for test-role
+- name: start docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
