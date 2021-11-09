@@ -1,16 +1,19 @@
 # hosts => adresse ip ou bloc dans l'inventory
 - hosts: all
   become: true
+  vars:
+    docker_debian_key: https://download.docker.com/linux/ubuntu/gpg,
+    docker_debian_base_repos: deb [arch=amd64] https://download.docker.com/linux/ubuntu
   tasks:
     - name: add docker gpg key
       apt_key:
-        url : https://download.docker.com/linux/ubuntu/gpg
+        url : "{{docker_debian_key}}"
         state: present
       when:
         ansible_facts["os_family"] == "Debian"
     - name: add docker repository
       apt_repository:
-        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+        repo: " {{docker_debian_base_repos}} {{ ansible_facts['ansible_lsb']['codename'] }} stable"
       when:
         ansible_facts["os_family"] == "Debian"
     - name: install docker component
