@@ -1,2 +1,3 @@
 docker.pem
-*.pem
+*.cfg
+ansible/hosts
