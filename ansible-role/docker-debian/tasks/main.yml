@@ -21,3 +21,7 @@
     notify: start docker service
     when:
       ansible_facts["os_family"] == "Debian"
+  - name: copy daemon docker
+    copy:
+      src: ../templates/daemon.json.j2
+      dest: /etc/docker/daemon.json

@@ -2,3 +2,4 @@
 # vars file for test-role
 docker_debian_key: https://download.docker.com/linux/ubuntu/gpg
 docker_debian_base_repos: deb [arch=amd64] https://download.docker.com/linux/ubuntu
+user_namespace: default_user
