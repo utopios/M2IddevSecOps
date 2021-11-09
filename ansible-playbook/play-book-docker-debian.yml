@@ -1,0 +1,32 @@
+# hosts => adresse ip ou bloc dans l'inventory
+- hosts: all
+  become: true
+  tasks:
+    - name: add docker gpg key
+      apt_key:
+        url : https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      when:
+        ansible_facts["os_family"] == "Debian"
+    - name: add docker repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+      when:
+        ansible_facts["os_family"] == "Debian"
+    - name: install docker component
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        update_cache: yes
+      when:
+        ansible_facts["os_family"] == "Debian"
+    - name: start docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+    
+
+    
