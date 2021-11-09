@@ -1,0 +1,5 @@
+---
+reports_folder: reports
+web_url: https://google.com
+container_name: zap_google
+image_name: owasp/zap2docker-weekly

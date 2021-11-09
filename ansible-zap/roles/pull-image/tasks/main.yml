@@ -1,0 +1,21 @@
+---
+  - name: install pip debian
+    apt:
+      name:
+        - python3-pip
+    when:
+      ansible_facts["os_family"] == "Debian"
+  - name: install pip redhat
+    yum:
+      name:
+        - python3-pip
+    when:
+      ansible_facts["os_family"] == "RedHat"
+  - name: install docker-py
+    pip:
+      name:
+        - docker-py
+  - name: pull docker image {{image_name}}
+    docker_image:
+      name: "{{image_name}}"
+      source: pull
