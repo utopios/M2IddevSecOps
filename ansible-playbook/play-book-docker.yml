@@ -2,8 +2,9 @@
 - hosts: all
   become: true
   vars:
-    docker_debian_key: https://download.docker.com/linux/ubuntu/gpg,
+    docker_debian_key: https://download.docker.com/linux/ubuntu/gpg
     docker_debian_base_repos: deb [arch=amd64] https://download.docker.com/linux/ubuntu
+    debian_relase:
   tasks:
     - name: add docker gpg key
       apt_key:
@@ -13,7 +14,7 @@
         ansible_facts["os_family"] == "Debian"
     - name: add docker repository
       apt_repository:
-        repo: " {{docker_debian_base_repos}} {{ ansible_facts['ansible_lsb']['codename'] }} stable"
+        repo: " {{docker_debian_base_repos}} {{ ansible_facts['distribution_release'] }} stable"
       when:
         ansible_facts["os_family"] == "Debian"
     - name: install docker component
@@ -23,6 +24,7 @@
           - docker-ce-cli
           - containerd.io
         update_cache: yes
+      notify: start docker service
       when:
         ansible_facts["os_family"] == "Debian"
     
@@ -45,8 +47,15 @@
           - docker-ce-cli
           - containerd.io
         update_cache: yes
+      notify: start docker service
       when:
         ansible_facts["os_family"] == "RedHat" 
+    # - name: start docker service
+    #   service:
+    #     name: docker
+    #     state: started
+    #     enabled: yes
+  handlers:
     - name: start docker service
       service:
         name: docker
