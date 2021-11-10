@@ -34,14 +34,21 @@ resource "aws_instance" "first_instance_3" {
         private_key = file("./ter")
         host = self.public_ip
     }
+    
     provisioner "remote-exec" {
         inline = [
             "sudo apt-get update"
         ]
     }
-provisioner "local-exec" {
-    command = "echo test > test.txt"
-}
+    
+    provisioner "local-exec" {
+        command = "echo ${aws_instance.first_instance_3.public_ip} >> adresses-ip.txt"
+    }
+
+    provisioner "file" {
+        source = "./toCopy"
+        destination = "/var/www/html"
+    }
 }
 
 
