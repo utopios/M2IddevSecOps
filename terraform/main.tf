@@ -26,6 +26,10 @@ resource "aws_security_group" "instance_group" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 }
+
+provider "vault" {
+    
+}
 data "aws_ami" "get_ubuntu_ami" {
     most_recent = true
     owners = [100000]
