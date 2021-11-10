@@ -1,3 +1,4 @@
 docker.pem
 *.cfg
 ansible/hosts
+access-aws
