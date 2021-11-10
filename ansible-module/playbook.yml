@@ -1,0 +1,11 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: attack test module
+      test:
+        name: "first attack"
+        attack:
+          - "https://google.com"
+      register: result
+
+    - debug: var=result
