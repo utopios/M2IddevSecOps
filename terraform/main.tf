@@ -26,13 +26,21 @@ resource "aws_security_group" "instance_group" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 }
+data "aws_ami" "get_ubuntu_ami" {
+    most_recent = true
+    owners = [100000]
+    filter {
+        name = "name"
+        values = ["ubuntu"]
+    }
+}
 resource "aws_key_pair" "key_ssh" {
     key_name = "test-terraform-${terraform.workspace}"
     public_key = file("./ter.pub")
 }
 resource "aws_instance" "first_instance_3" {
     instance_type = "t2.micro"
-    ami = "ami-0629230e074c580f2"
+    ami = data.aws_ami.get_ubuntu_ami.id
     tags = {
         Name = "instance-${terraform.workspace}"
     }
