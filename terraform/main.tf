@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_security_group" "instance_group" {
-    name = "test-group-terraform"
+    name = "test-group-terraform-${terraform.workspace}"
     egress {
         from_port = 0
         to_port = 0
@@ -27,12 +27,15 @@ resource "aws_security_group" "instance_group" {
     }
 }
 resource "aws_key_pair" "key_ssh" {
-    key_name = "test-terraform"
+    key_name = "test-terraform-${terraform.workspace}"
     public_key = file("./ter.pub")
 }
 resource "aws_instance" "first_instance_3" {
     instance_type = "t2.micro"
     ami = "ami-0629230e074c580f2"
+    tags = {
+        Name = "instance-${terraform.workspace}"
+    }
     key_name = aws_key_pair.key_ssh.key_name
     vpc_security_group_ids=[aws_security_group.instance_group.id]
     connection {
@@ -52,13 +55,16 @@ resource "aws_instance" "first_instance_3" {
         command = "echo ${aws_instance.first_instance_3.public_ip} >> adresses-ip.txt"
     }
 
-    provisioner "file" {
-        source = "./toCopy"
-        destination = "/var/www/html"
-    }
+    # provisioner "file" {
+    #     source = "./toCopy"
+    #     destination = "/var/www/html"
+    # }
 }
 
-
+module "test_module" {
+    source = "./module-terraform"
+    test_variable = "valeur de la variable"
+}
 # resource "aws_iam_user" "new_user" {
 #     count = length(var.AWS_USERS)
 #     name = var.AWS_USERS[count.index]
@@ -67,4 +73,10 @@ resource "aws_instance" "first_instance_3" {
 output aws_ip_instance {
   value       = aws_instance.first_instance_3.public_ip
   
+}
+output get_result_test_module {
+  value       = test_module.result_module
+  sensitive   = true
+  description = "description"
+  depends_on  = []
 }
